@@ -1,0 +1,427 @@
+﻿<!--
+Program name: homework2.html
+Author: Xander Vanoven
+Date created: 06/29/2026
+Date last edited: 06/29/2026
+Version: 3.0
+Description: Patient registration with review summary, improved validation, and dynamic slider feedback.
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Anthony Davis Infirmary - Patient Registration Review</title>
+
+  <link href="style2.css" rel="stylesheet" />
+</head>
+
+<body>
+
+  <div id="site-banner" role="banner">
+    <div id="banner-logo" aria-label="Anthony Davis Infirmary logo">
+      <img src="../AnthonyDavisInjurySpecialist.png" alt="Anthony Davis" width="120" />
+    </div>
+    <div id="banner-text">
+      <h1>Anthony Davis Infirmary</h1>
+      <span class="banner-tagline sh1">Slightly Below Average Care &bull; Not-so-urgent Service</span>
+    </div>
+    <div id="banner-date-wrapper">
+      <span class="banner-date sh1" id="live-date">Loading date...</span>
+    </div>
+  </div>
+
+  <main id="main-content" role="main">
+    <div class="form-card">
+      <h2>New Patient Registration</h2>
+      <p class="form-subtitle">
+        Fields marked <strong class="required">*</strong> are required. Use the Review button to display all entered data below.
+      </p>
+
+      <form id="registration-form" action="thankyou2.html">
+
+        <div class="section-heading">1: Personal Information</div>
+        <table class="form-table">
+          <tr>
+            <td class="label-cell">
+              First Name <span class="required">*</span>
+            </td>
+            <td>
+              <input type="text" id="first-name" name="first_name"
+                     maxlength="30" placeholder="First name"
+                     pattern="^[A-Za-z'\-]{1,30}$"
+                     title="1-30 letters, apostrophes, or dashes only"
+                     required autocomplete="given-name" />
+              <span class="field-error" id="first-name-error"></span>
+            </td>
+            <td class="label-cell label-pad-20">
+              MI
+            </td>
+            <td>
+              <input type="text" id="middle-initial" name="middle_initial"
+                     class="input-short" maxlength="1"
+                     placeholder="M"
+                     pattern="^[A-Za-z]?$"
+                     title="Optional single letter only"
+                     autocomplete="additional-name" />
+              <span class="field-error" id="middle-initial-error"></span>
+            </td>
+            <td class="label-cell label-pad-20">
+              Last Name <span class="required">*</span>
+            </td>
+            <td>
+              <input type="text" id="last-name" name="last_name"
+                     maxlength="30" placeholder="Last name"
+                     pattern="^[A-Za-z][A-Za-z'\-2-5]{0,29}$"
+                     title="1-30 characters: letters, apostrophes, dashes, and digits 2-5 only"
+                     required autocomplete="family-name" />
+              <span class="field-error" id="last-name-error"></span>
+            </td>
+          </tr>
+
+          <tr>
+            <td class="label-cell">
+              Date of Birth <span class="required">*</span>
+            </td>
+            <td colspan="5">
+              <input type="date" id="dob" name="dob"
+                     class="input-med"
+                     title="Enter your birth date. Must be a date in the past and not more than 120 years ago"
+                     required />
+              <span class="field-error" id="dob-error"></span>
+            </td>
+          </tr>
+
+          <tr>
+            <td class="label-cell">
+              Preferred Visit Date <span class="required">*</span>
+            </td>
+            <td colspan="5">
+              <input type="date" id="future-date" name="future_date"
+                     class="input-med"
+                     title="Enter a future appointment date"
+                     required />
+              <span class="field-error" id="future-date-error"></span>
+            </td>
+          </tr>
+
+          <tr>
+            <td class="label-cell">
+              ID Number <span class="required">*</span>
+            </td>
+            <td colspan="5">
+              <input type="password" id="id-number" name="id_number"
+                     class="input-med"
+                     minlength="9" maxlength="11"
+                     placeholder="XXX-XX-XXXX"
+                     pattern="^\d{3}-?\d{2}-?\d{4}$"
+                     title="Enter 9 digits or XXX-XX-XXXX; value is masked"
+                     autocomplete="off" required />
+              <small class="help-text">
+                This number is stored as a masked ID; do not use a real SSN.
+              </small>
+              <span class="field-error" id="id-number-error"></span>
+            </td>
+          </tr>
+        </table>
+
+        <div class="section-heading">2: Contact & Address</div>
+        <table class="form-table">
+          <tr>
+            <td class="label-cell">Address Line 1 <span class="required">*</span></td>
+            <td colspan="5">
+              <input type="text" id="addr1" name="addr1"
+                     maxlength="30" placeholder="Street address"
+                     pattern="^.{2,30}$"
+                     title="2-30 characters for address line 1"
+                     required autocomplete="address-line1" />
+              <span class="field-error" id="addr1-error"></span>
+            </td>
+          </tr>
+
+          <tr>
+            <td class="label-cell">Address Line 2</td>
+            <td colspan="5">
+              <input type="text" id="addr2" name="addr2"
+                     maxlength="30" placeholder="Apt, Suite, Unit (optional)"
+                     pattern="^.{0,30}$"
+                     title="Optional address line 2, up to 30 characters"
+                     autocomplete="address-line2" />
+              <span class="field-error" id="addr2-error"></span>
+            </td>
+          </tr>
+
+          <tr>
+            <td class="label-cell">City <span class="required">*</span></td>
+            <td>
+              <input type="text" id="city" name="city"
+                     maxlength="30" placeholder="City"
+                     pattern="^[A-Za-z '\-]{2,30}$"
+                     title="2-30 characters: letters, spaces, apostrophes, and dashes"
+                     required autocomplete="address-level2" />
+              <span class="field-error" id="city-error"></span>
+            </td>
+            <td class="label-cell label-pad-14">
+              State <span class="required">*</span>
+            </td>
+            <td class="state-cell">
+              <select id="state" name="state" required autocomplete="address-level1">
+                <option value="">— Select —</option>
+                <option value="AL">AL</option>
+                <option value="AK">AK</option>
+                <option value="AZ">AZ</option>
+                <option value="AR">AR</option>
+                <option value="CA">CA</option>
+                <option value="CO">CO</option>
+                <option value="CT">CT</option>
+                <option value="DE">DE</option>
+                <option value="DC">DC</option>
+                <option value="FL">FL</option>
+                <option value="GA">GA</option>
+                <option value="HI">HI</option>
+                <option value="ID">ID</option>
+                <option value="IL">IL</option>
+                <option value="IN">IN</option>
+                <option value="IA">IA</option>
+                <option value="KS">KS</option>
+                <option value="KY">KY</option>
+                <option value="LA">LA</option>
+                <option value="ME">ME</option>
+                <option value="MD">MD</option>
+                <option value="MA">MA</option>
+                <option value="MI">MI</option>
+                <option value="MN">MN</option>
+                <option value="MS">MS</option>
+                <option value="MO">MO</option>
+                <option value="MT">MT</option>
+                <option value="NE">NE</option>
+                <option value="NV">NV</option>
+                <option value="NH">NH</option>
+                <option value="NJ">NJ</option>
+                <option value="NM">NM</option>
+                <option value="NY">NY</option>
+                <option value="NC">NC</option>
+                <option value="ND">ND</option>
+                <option value="OH">OH</option>
+                <option value="OK">OK</option>
+                <option value="OR">OR</option>
+                <option value="PA">PA</option>
+                <option value="PR">PR</option>
+                <option value="RI">RI</option>
+                <option value="SC">SC</option>
+                <option value="SD">SD</option>
+                <option value="TN">TN</option>
+                <option value="TX">TX</option>
+                <option value="UT">UT</option>
+                <option value="VT">VT</option>
+                <option value="VA">VA</option>
+                <option value="WA">WA</option>
+                <option value="WV">WV</option>
+                <option value="WI">WI</option>
+                <option value="WY">WY</option>
+              </select>
+              <span class="field-error" id="state-error"></span>
+            </td>
+            <td class="label-cell label-pad-14">
+              Zip <span class="required">*</span>
+            </td>
+            <td>
+              <input type="text" id="zip" name="zip"
+                     class="input-zip"
+                     maxlength="10" placeholder="77002 or 77002-1234"
+                     pattern="^\d{5}(-\d{4})?$"
+                     title="5 digits or ZIP+4 format"
+                     required autocomplete="postal-code" />
+              <span class="field-error" id="zip-error"></span>
+            </td>
+          </tr>
+
+          <tr>
+            <td class="label-cell">Email <span class="required">*</span></td>
+            <td colspan="5">
+              <input type="email" id="email" name="email"
+                     placeholder="name@domain.tld"
+                     title="Enter a valid email address like name@domain.tld"
+                     required autocomplete="email" />
+              <span class="field-error" id="email-error"></span>
+            </td>
+          </tr>
+
+          <tr>
+            <td class="label-cell">Phone <span class="required">*</span></td>
+            <td colspan="5">
+              <input type="tel" id="phone" name="phone"
+                     class="input-med"
+                     placeholder="000-000-0000"
+                     pattern="^\d{3}-\d{3}-\d{4}$"
+                     title="Enter phone as 000-000-0000"
+                     required autocomplete="tel" />
+              <span class="field-error" id="phone-error"></span>
+            </td>
+          </tr>
+        </table>
+
+        <div class="section-heading">3: Health History</div>
+        <table class="form-table">
+          <tr>
+            <td class="label-cell cell-top-6">
+              Check all that apply:
+            </td>
+            <td colspan="5">
+              <div class="check-group">
+                <label><input type="checkbox" name="history" value="chicken_pox" /> Chicken Pox</label>
+                <label><input type="checkbox" name="history" value="measles" /> Measles</label>
+                <label><input type="checkbox" name="history" value="covid19" /> COVID-19</label>
+              </div>
+              <div class="check-group">
+                <label><input type="checkbox" name="history" value="mumps" /> Mumps</label>
+                <label><input type="checkbox" name="history" value="heart_disease" /> Heart Disease</label>
+                <label><input type="checkbox" name="history" value="diabetic" /> Diabetic</label>
+              </div>
+            </td>
+          </tr>
+
+          <tr>
+            <td class="label-cell">Living situation <span class="required">*</span></td>
+            <td colspan="5">
+              <div class="radio-group">
+                <label><input type="radio" name="housing" value="own" required /> Own</label>
+                <label><input type="radio" name="housing" value="rent" /> Rent</label>
+                <label><input type="radio" name="housing" value="unsure" /> Unsure</label>
+              </div>
+            </td>
+          </tr>
+
+          <tr>
+            <td class="label-cell">Vaccinated? <span class="required">*</span></td>
+            <td colspan="5">
+              <div class="radio-group">
+                <label><input type="radio" name="vaccinated" value="yes" required /> Yes</label>
+                <label><input type="radio" name="vaccinated" value="no" /> No</label>
+                <label><input type="radio" name="vaccinated" value="partial" /> Partially</label>
+              </div>
+            </td>
+          </tr>
+
+          <tr>
+            <td class="label-cell cell-top-10">
+              Current health rating <span class="required">*</span>
+            </td>
+            <td colspan="5">
+              <p class="info-text info-text--slider">
+                Desired level: <span id="health-value">5</span> of 10
+              </p>
+              <input type="range" id="health-rating" name="health_rating"
+                     min="1" max="10" value="5" />
+            </td>
+          </tr>
+
+          <tr>
+            <td class="label-cell cell-top-10">
+              Notes / additional details
+            </td>
+            <td colspan="5">
+              <textarea id="symptoms" name="symptoms"
+                        rows="4" cols="50"
+                        maxlength="500"
+                        placeholder="Optional details, symptoms, or notes."
+                        pattern="^[^\"]*$"
+                        title="Optional text. Double quotes are not allowed."
+                        ></textarea>
+              <span class="field-error" id="symptoms-error"></span>
+            </td>
+          </tr>
+        </table>
+
+        <div class="section-heading">4: Account Credentials</div>
+        <table class="form-table">
+          <tr>
+            <td class="label-cell">
+              Desired User ID <span class="required">*</span>
+            </td>
+            <td colspan="5">
+              <input type="text" id="user-id" name="user_id"
+                     class="input-med"
+                     maxlength="30"
+                     placeholder="e.g. jsmith_82"
+                     pattern="^[A-Za-z][A-Za-z0-9_-]{4,29}$"
+                     title="5-30 chars, letters first, no spaces, allowed underscore or dash"
+                     required autocomplete="username" />
+              <span class="field-error" id="user-id-error"></span>
+            </td>
+          </tr>
+
+          <tr>
+            <td class="label-cell">
+              Password <span class="required">*</span>
+            </td>
+            <td colspan="5">
+              <input type="password" id="password" name="password"
+                     class="input-med"
+                     minlength="8" maxlength="30"
+                     placeholder="Min. 8 characters"
+                     title="8-30 chars with upper/lowercase, digit, special char, no quotes"
+                     required autocomplete="new-password" />
+              <span class="field-error" id="password-error"></span>
+            </td>
+          </tr>
+
+          <tr>
+            <td class="label-cell">
+              Re-enter Password <span class="required">*</span>
+            </td>
+            <td colspan="5">
+              <input type="password" id="password-confirm" name="password_confirm"
+                     class="input-med"
+                     minlength="8" maxlength="30"
+                     placeholder="Repeat password"
+                     title="Repeat the password exactly"
+                     required autocomplete="new-password" />
+              <span class="field-error" id="password-confirm-error"></span>
+            </td>
+          </tr>
+        </table>
+
+        <div class="btn-row">
+          <button type="reset" class="btn-reset">&#x21BA; Clear and Start Over</button>
+          <button type="button" id="review-btn" class="btn-review">Review Info</button>
+          <button type="submit" id="submit-btn" class="btn-submit hidden">Submit Registration &#x2192;</button>
+        </div>
+      </form>
+
+      <div id="review-summary" class="review-card hidden" aria-live="polite">
+        <h3>PLEASE REVIEW THIS INFORMATION</h3>
+        <div id="review-content"></div>
+      </div>
+    </div>
+  </main>
+
+  <footer id="site-footer" role="contentinfo">
+    <div class="footer-inner">
+      <div class="footer-address">
+        <strong>Anthony Davis Infirmary</strong><br />2500 Victory Ave,<br />Dallas, TX 75219
+      </div>
+      <button class="btn-contact" id="contact-btn">Contact Us</button>
+      <div class="footer-social">
+        <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer">Facebook</a>
+        <a href="https://www.twitter.com" target="_blank" rel="noopener noreferrer">Twitter / X</a>
+        <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer">Instagram</a>
+      </div>
+      <div class="footer-copy">&copy; <span id="footer-year"></span> Anthony Davis Infirmary.</div>
+    </div>
+  </footer>
+
+  <div class="temporary-debug-section">
+    <button type="button" id="view-data-btn" class="temp-view-btn">View Data</button>
+    <div id="temporary-data-panel" class="temporary-data-panel hidden" aria-live="polite">
+      <h3>Temporary Data View</h3>
+      <table class="temporary-data-table">
+        <tbody id="temporary-data-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script src="script2.js"></script>
+</body>
+</html>
